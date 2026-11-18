@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Slimste Collega</title>
+<style>
+:root{--bg:#0f1f4d;--panel:#1a2f6e;--line:#2c4590;--paper:#f4f6ff;--red:#e2373f;--clock:#ffd23f;--ok:#3ecf8e;--mute:#9fb0e0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--paper);font:17px/1.4 "Helvetica Neue",Arial,sans-serif;min-height:100vh}
+#app{max-width:520px;margin:0 auto;padding:20px 16px 48px}
+h1,h2{font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;letter-spacing:-.02em;margin:0 0 12px}
+h1{font-size:2rem;line-height:1.05}h2{font-size:1.35rem;line-height:1.2}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin:0 0 14px}
+.mute{color:var(--mute);font-size:.9rem}
+input,textarea{width:100%;font:inherit;padding:14px;border-radius:8px;border:2px solid var(--line);background:#0b1740;color:var(--paper)}
+input:focus,textarea:focus,button:focus-visible{outline:3px solid var(--clock);outline-offset:2px}
+textarea{min-height:180px;font:13px/1.4 ui-monospace,Menlo,monospace}
+button{font:inherit;font-weight:700;width:100%;padding:15px;margin:6px 0;border:0;border-radius:8px;background:var(--clock);color:#1a1a1a;cursor:pointer}
+button.alt{background:transparent;color:var(--paper);border:2px solid var(--line)}
+button.opt{background:var(--panel);color:var(--paper);border:2px solid var(--line);text-align:left}
+button.opt:active{background:var(--red);border-color:var(--red)}
+button:disabled{opacity:.5}
+.bar{height:10px;background:#0b1740;border-radius:5px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;width:100%;background:var(--clock)}
+.sec{font-family:"Arial Black",Arial,sans-serif;font-size:2.4rem;color:var(--clock)}
+.q{font-size:1.3rem;font-weight:700;margin:8px 0 14px}
+.good{color:var(--ok)}.bad{color:var(--red)}
+ol.board{list-style:none;margin:0;padding:0}
+ol.board li{display:flex;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+ol.board li span{width:28px;color:var(--mute)}ol.board li b{flex:1;font-weight:600}
+ol.board li em{font-style:normal;font-weight:800;color:var(--clock)}
+ol.board li.me{background:#264190;border-radius:6px}
+.row{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.row b{flex:1;font-weight:600}.row small{color:var(--mute)}
+.row button{width:auto;padding:6px 12px;margin:0}
+.big .q{font-size:2rem}.big .sec{font-size:3.4rem}.big h2{font-size:1.8rem}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+/* ===== INSTELLINGEN ===== */
+const CFG = {
+  title: "De Slimste Collega",
+  hostPin: "4827",          // pincode voor het hostscherm
+  seconds: 20,              // tijd per vraag
+  firebase: {               // plak hier je Firebase-config
+    apiKey: "AIzaSyCJ2vesmFz9u3qysvCCY11_REYR8UZPIBI",
+    authDomain: "de-slimste-collega.firebaseapp.com",
+    databaseURL: "https://de-slimste-collega-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "de-slimste-collega",
+    appId: "1:1029979378205:web:635f25e6eeeb125d5c2cf4"
+  }
+};
+const SAMPLE = [
+  {type:"mc",q:"Hoeveel provincies heeft Vlaanderen?",options:["3","4","5","6"],correct:2},
+  {type:"open",q:"Welke rivier stroomt door Leuven?",answers:["Dijle"]},
+  {type:"mc",q:"Wat is de hoofdstad van Belgie?",options:["Antwerpen","Brussel","Gent","Luik"],correct:1},
+  {type:"open",q:"Hoe heet de Belgische nationale voetbalploeg?",answers:["Rode Duivels","Duivels"]}
+];
+
+/* ===== HULPFUNCTIES ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+const app = $('#app');
+
+if (!CFG.firebase.apiKey) {
+  app.innerHTML = `<h1>${esc(CFG.title)}</h1><div class="panel"><h2>Nog niet ingesteld</h2><p>Vul de Firebase-gegevens in bij <b>CFG.firebase</b> bovenaan in index.html.</p></div>`;
+  throw new Error("Firebase-config ontbreekt");
+}
+
+firebase.initializeApp(CFG.firebase);
+const db = firebase.database();
+let offset = 0;
+db.ref('.info/serverTimeOffset').on('value', s => offset = s.val() || 0);
+const now = () => Date.now() + offset;
+
+const isHost = location.hash === '#host';
+const isScreen = location.hash === '#scherm';
+if (isScreen) document.body.style.fontSize = '22px';
+let hostOk = sessionStorage.getItem('hostOk') === '1';
+let me = JSON.parse(localStorage.getItem('me') || 'null');
+let game = {phase:'lobby'}, players = {}, answers = {}, curQ = null, aRef = null, revealing = false;
+let draftName = '', draftAns = '';
+window.addEventListener('hashchange', () => location.reload());
+
+const getQs = () => { try { return JSON.parse(localStorage.getItem('qs') || JSON.stringify(SAMPLE, null, 1)); } catch (e) { return []; } };
+const calcPts = t => 100 + Math.round(50 * Math.max(0, 1 - t / (CFG.seconds * 1000)));
+const ranked = () => Object.entries(players).map(([id, p]) => ({id, ...p})).sort((a, b) => (b.score || 0) - (a.score || 0));
+
+/* ===== DATA ===== */
+db.ref('game').on('value', s => { game = s.val() || {phase:'lobby'}; watch(); render(); });
+db.ref('players').on('value', s => {
+  players = s.val() || {};
+  if (me && !isHost && !players[me.id]) db.ref('players/' + me.id).set({name: me.name, score: 0});
+  if (!isHost && !isScreen && game.phase === 'question') return;
+  render();
+});
+function watch() {
+  if (game.q === curQ) return;
+  if (aRef) aRef.off();
+  curQ = game.q; answers = {};
+  if (curQ == null) return;
+  if (isHost || isScreen) { aRef = db.ref('answers/' + curQ); aRef.on('value', s => { answers = s.val() || {}; render(); }); }
+  else if (me) { aRef = db.ref(`answers/${curQ}/${me.id}`); aRef.on('value', s => { answers = s.val() ? {[me.id]: s.val()} : {}; render(); }); }
+}
+
+/* ===== SPELERACTIES ===== */
+function join() {
+  const n = draftName.trim().slice(0, 24); if (!n) return;
+  me = {id: Math.random().toString(36).slice(2, 10), name: n};
+  localStorage.setItem('me', JSON.stringify(me));
+  db.ref('players/' + me.id).set({name: n, score: 0});
+  watch(); render();
+}
+function submit(v) {
+  if (!me || game.phase !== 'question' || answers[me.id]) return;
+  if (v === '' || v == null) return;
+  const t = now() - game.startedAt;
+  if (t > game.seconds * 1000 + 1500) return;
+  db.ref(`answers/${game.q}/${me.id}`).set({value: v, t});
+  draftAns = '';
+}
+
+/* ===== HOSTACTIES ===== */
+function startQ(i) {
+  const qs = getQs(), q = qs[i]; if (!q) return;
+  const cur = {type: q.type, q: q.q}; if (q.type === 'mc') cur.options = q.options;
+  db.ref('game').set({phase:'question', q:i, total:qs.length, cur, seconds:CFG.seconds, startedAt:firebase.database.ServerValue.TIMESTAMP});
+}
+async function reveal() {
+  if (revealing || game.phase !== 'question') return;
+  revealing = true;
+  const q = getQs()[game.q];
+  const all = (await db.ref('answers/' + game.q).once('value')).val() || {};
+  const ups = {}, tasks = [];
+  for (const [pid, a] of Object.entries(all)) {
+    const ok = q.type === 'mc' ? Number(a.value) === q.correct : (q.answers || []).some(x => norm(x) === norm(a.value));
+    const pts = ok ? calcPts(a.t) : 0;
+    ups[`${game.q}/${pid}/ok`] = ok; ups[`${game.q}/${pid}/pts`] = pts;
+    if (pts) tasks.push(db.ref(`players/${pid}/score`).transaction(s => (s || 0) + pts));
+  }
+  if (Object.keys(ups).length) await db.ref('answers').update(ups);
+  await Promise.all(tasks);
+  await db.ref('game').update({phase:'reveal', correct: q.type === 'mc' ? q.options[q.correct] : q.answers[0]});
+  revealing = false;
+}
+async function toggle(pid) {
+  const a = answers[pid]; if (!a) return;
+  const ok = !a.ok, pts = ok ? calcPts(a.t) : 0;
+  await db.ref(`answers/${game.q}/${pid}`).update({ok, pts});
+  db.ref(`players/${pid}/score`).transaction(s => (s || 0) + pts - (a.pts || 0));
+}
+const endGame = () => db.ref('game').update({phase:'ended'});
+function newGame() {
+  if (confirm('Alles wissen (spelers, scores, antwoorden)?')) db.ref().update({game:null, answers:null, players:null});
+}
+function checkPin() {
+  if ($('#pin').value === CFG.hostPin) { sessionStorage.setItem('hostOk', '1'); hostOk = true; render(); }
+  else alert('Verkeerde pincode');
+}
+function saveQs() {
+  try { const v = JSON.parse($('#qs').value); if (!Array.isArray(v)) throw 0; localStorage.setItem('qs', JSON.stringify(v, null, 1)); render(); alert(v.length + ' vragen opgeslagen'); }
+  catch (e) { alert('Ongeldige JSON, controleer de komma\'s en aanhalingstekens'); }
+}
+
+/* ===== WEERGAVE ===== */
+function board(n = 15) {
+  const r = ranked();
+  let h = r.slice(0, n).map((p, i) => `<li class="${me && p.id === me.id ? 'me' : ''}"><span>${i + 1}</span><b>${esc(p.name)}</b><em>${p.score || 0}</em></li>`).join('');
+  if (me) { const i = r.findIndex(p => p.id === me.id); if (i >= n) h += `<li class="me"><span>${i + 1}</span><b>${esc(me.name)}</b><em>${r[i].score || 0}</em></li>`; }
+  return `<div class="panel"><ol class="board">${h || '<li class="mute">Nog geen spelers</li>'}</ol></div>`;
+}
+const timerHtml = () => `<div class="sec" id="sec"></div><div class="bar"><i id="bar"></i></div>`;
+const head = () => `<h1>${esc(CFG.title)}</h1>`;
+const qHead = () => `<p class="mute">Vraag ${game.q + 1} van ${game.total}</p>`;
+
+function render() {
+  if (isScreen) return app.innerHTML = head() + screenView();
+  if (isHost) return app.innerHTML = head() + (hostOk ? hostView() : pinView());
+  app.innerHTML = head() + (me ? playerView() : joinView());
+  const i = $('#ans'); if (i) i.value = draftAns;
+}
+function pinView() { return `<div class="panel"><h2>Hostscherm</h2><input id="pin" type="password" inputmode="numeric" placeholder="Pincode"><button onclick="checkPin()">Open</button></div>`; }
+function joinView() {
+  return `<div class="panel"><h2>Doe mee</h2><input id="nm" maxlength="24" placeholder="Jouw naam" value="${esc(draftName)}" oninput="draftName=this.value"><button onclick="join()">Meespelen</button></div>`;
+}
+function playerView() {
+  const ph = game.phase, a = me && answers[me.id];
+  if (ph === 'lobby') return `<div class="panel"><h2>Hallo ${esc(me.name)}</h2><p>Wacht tot de quiz begint. ${Object.keys(players).length} spelers zijn klaar.</p></div>`;
+  if (ph === 'question') {
+    const c = game.cur;
+    let body;
+    if (a) body = `<p class="good"><b>Antwoord ingediend.</b> Wacht op de anderen.</p>`;
+    else if (c.type === 'mc') body = c.options.map((o, i) => `<button class="opt" onclick="submit(${i})">${esc(o)}</button>`).join('');
+    else body = `<input id="ans" autocomplete="off" placeholder="Jouw antwoord" oninput="draftAns=this.value" onkeydown="if(event.key==='Enter')submit(this.value.trim())"><button onclick="submit($('#ans').value.trim())">Verstuur</button>`;
+    return `<div class="panel">${qHead()}${timerHtml()}<div class="q">${esc(c.q)}</div>${body}</div>`;
+  }
+  if (ph === 'reveal') {
+    const res = !a ? `<p class="bad"><b>Geen antwoord gegeven.</b></p>` : a.ok ? `<p class="good"><b>Juist! +${a.pts} punten</b></p>` : `<p class="bad"><b>Fout.</b></p>`;
+    return `<div class="panel">${qHead()}<div class="q">${esc(game.cur.q)}</div><p>Juist antwoord: <b>${esc(game.correct)}</b></p>${res}</div><h2>Tussenstand</h2>${board()}`;
+  }
+  return `<h2>Eindstand</h2>${board(15)}`;
+}
+function screenView() {
+  const ph = game.phase, np = Object.keys(players).length;
+  if (ph === 'lobby') return `<div class="panel big"><h2>Doe mee via deze link</h2><p class="good"><b>${esc(location.origin + location.pathname)}</b></p><p>${np} spelers: ${ranked().map(p => esc(p.name)).join(', ') || 'nog niemand'}</p></div>`;
+  if (ph === 'question') {
+    const c = game.cur;
+    const opts = c.type === 'mc' ? c.options.map((o, i) => `<div class="row"><b>${'ABCD'[i] || i + 1}. ${esc(o)}</b></div>`).join('') : '';
+    return `<div class="panel big">${qHead()}${timerHtml()}<div class="q">${esc(c.q)}</div>${opts}<p class="mute">${Object.keys(answers).length} van ${np} hebben geantwoord</p></div>`;
+  }
+  if (ph === 'reveal') return `<div class="panel big">${qHead()}<div class="q">${esc(game.cur.q)}</div><p>Juist antwoord: <b class="good">${esc(game.correct)}</b></p></div><h2>Tussenstand</h2>${board(15)}`;
+  return `<h2>Eindstand</h2>${board(15)}`;
+}
+function hostView() {
+  const ph = game.phase, qs = getQs(), np = Object.keys(players).length;
+  if (ph === 'lobby') return `<div class="panel"><h2>Klaarzetten</h2><p>${np} spelers zijn binnen. Spelers gebruiken de gewone link. Zet <b>#scherm</b> achter de link voor het grote scherm of de beamer.</p>
+    <p class="mute">Vragen (JSON). Typen: "mc" met options en correct (nummer, start bij 0), of "open" met answers (lijst van geldige antwoorden).</p>
+    <textarea id="qs">${esc(localStorage.getItem('qs') || JSON.stringify(SAMPLE, null, 1))}</textarea>
+    <button class="alt" onclick="saveQs()">Vragen opslaan</button>
+    <button onclick="startQ(0)" ${qs.length ? '' : 'disabled'}>Start vraag 1 van ${qs.length}</button></div>`;
+  const q = qs[game.q] || {};
+  const corr = q.type === 'mc' ? (q.options || [])[q.correct] : (q.answers || [])[0];
+  if (ph === 'question') return `<div class="panel">${qHead()}${timerHtml()}<div class="q">${esc(game.cur.q)}</div><p class="mute">Juist: ${esc(corr)}</p>
+    <p><b>${Object.keys(answers).length}</b> van ${np} hebben geantwoord</p><button onclick="reveal()">Toon antwoord</button></div>`;
+  if (ph === 'reveal') {
+    const rows = Object.entries(answers).map(([pid, a]) => {
+      const lbl = q.type === 'mc' ? (q.options[a.value] ?? a.value) : a.value;
+      return `<div class="row"><b>${esc(players[pid] ? players[pid].name : '?')}</b><small>${esc(lbl)}</small><button class="${a.ok ? '' : 'alt'}" onclick="toggle('${pid}')">${a.ok ? 'juist' : 'fout'}</button></div>`;
+    }).join('') || '<p class="mute">Niemand antwoordde.</p>';
+    const last = game.q + 1 >= game.total;
+    return `<div class="panel">${qHead()}<div class="q">${esc(game.cur.q)}</div><p>Juist: <b>${esc(game.correct)}</b></p>${rows}
+      <p class="mute">Tik op juist of fout om een antwoord te corrigeren, de punten passen zich aan.</p>
+      ${last ? '<button onclick="endGame()">Toon eindstand</button>' : `<button onclick="startQ(${game.q + 1})">Volgende vraag</button>`}</div>${board()}`;
+  }
+  return `<h2>Eindstand</h2>${board(15)}<button class="alt" onclick="newGame()">Nieuw spel</button>`;
+}
+
+/* ===== TIMER ===== */
+setInterval(() => {
+  if (game.phase !== 'question' || !game.startedAt) return;
+  const left = Math.max(0, game.seconds * 1000 - (now() - game.startedAt));
+  const s = $('#sec'), b = $('#bar');
+  if (s) s.textContent = left > 0 ? Math.ceil(left / 1000) + ' s' : 'Tijd om';
+  if (b) b.style.width = (left / (game.seconds * 1000) * 100) + '%';
+  if (isHost && hostOk && left === 0 && now() - game.startedAt > game.seconds * 1000 + 1500) reveal();
+}, 250);
+
+render();
+</script>
+</body>
+</html>
