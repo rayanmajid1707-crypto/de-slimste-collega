@@ -7,8 +7,8 @@
 <style>
 :root{
   --bg:#070d24;
-  --panel:rgba(16, 29, 74, 0.85);
-  --panel-border:rgba(99, 134, 235, 0.35);
+  --panel:rgba(16, 29, 74, 0.9);
+  --panel-border:rgba(99, 134, 235, 0.4);
   --paper:#f7f9ff;
   --red:#ff2a38;
   --red-glow:rgba(255, 42, 56, 0.55);
@@ -19,872 +19,276 @@
 }
 *{box-sizing:border-box}
 body{
-  margin:0;
-  background:var(--bg);
-  color:var(--paper);
-  font:17px/1.45 "Helvetica Neue",system-ui,-apple-system,sans-serif;
-  min-height:100vh;
-  overflow-x:hidden;
-  position:relative;
+  margin:0;background:var(--bg);color:var(--paper);
+  font:17px/1.45 "Helvetica Neue",system-ui,sans-serif;min-height:100vh;overflow-x:hidden;
 }
-body::before, body::after{
-  content:"";
-  position:fixed;
-  width:70vw;height:70vw;
-  border-radius:50%;
-  filter:blur(90px);
-  z-index:-1;
-  pointer-events:none;
-}
-body::before{
-  top:-25%;left:-15%;
-  background:radial-gradient(circle, rgba(255,42,56,0.22), transparent 70%);
-}
-body::after{
-  bottom:-25%;right:-15%;
-  background:radial-gradient(circle, rgba(45,95,255,0.28), transparent 70%);
-}
-
 #app{max-width:560px;margin:0 auto;padding:22px 16px 70px}
 body.is-screen #app{max-width:1040px;padding:30px 28px}
 
-.brand{text-align:center;margin-bottom:22px;position:relative}
-.brand-sub{
-  display:inline-block;
-  font-size:.72rem;
-  font-weight:900;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-  color:var(--gold);
-  margin-bottom:4px;
-}
-.brand h1{
-  font-family:"Arial Black","Impact",sans-serif;
-  letter-spacing:-.03em;
-  margin:0;
-  font-size:2.25rem;
-  line-height:1;
-  text-transform:uppercase;
-  color:#fff;
-  text-shadow:0 0 24px var(--red-glow), 0 4px 0 #7a0c14;
-}
-.brand h1 span{
-  color:var(--gold);
-  text-shadow:0 0 24px var(--gold-glow), 0 4px 0 #8a6400;
-}
-
-.badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:linear-gradient(135deg, var(--red), #b3121d);
-  color:#fff;
-  font-weight:900;
-  font-size:.75rem;
-  text-transform:uppercase;
-  letter-spacing:.1em;
-  padding:5px 12px;
-  border-radius:99px;
-  box-shadow:0 4px 12px var(--red-glow);
-  margin-bottom:10px;
-}
-
-.host-quip{
-  background:rgba(255, 212, 59, 0.12);
-  border-left:4px solid var(--gold);
-  padding:10px 14px;
-  border-radius:0 10px 10px 0;
-  font-style:italic;
-  color:#ffe999;
-  font-size:.95rem;
-  margin:12px 0;
-}
-
-h2{
-  font-family:"Arial Black","Helvetica Neue",sans-serif;
-  letter-spacing:-.02em;
-  margin:0 0 12px;
-  font-size:1.35rem;
-}
-.panel{
-  background:var(--panel);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  border:1px solid var(--panel-border);
-  border-radius:18px;
-  padding:22px;
-  margin:0 0 18px;
-  box-shadow:0 16px 40px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1);
-}
+.brand{text-align:center;margin-bottom:22px}
+.brand-sub{display:inline-block;font-size:.72rem;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.brand h1{font-family:"Arial Black","Impact",sans-serif;margin:0;font-size:2.25rem;text-transform:uppercase;color:#fff;text-shadow:0 0 24px var(--red-glow),0 4px 0 #7a0c14}
+.brand h1 span{color:var(--gold)}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-weight:900;font-size:.75rem;text-transform:uppercase;padding:5px 12px;border-radius:99px;margin-bottom:10px}
+.host-quip{background:rgba(255,212,59,0.12);border-left:4px solid var(--gold);padding:10px 14px;border-radius:0 10px 10px 0;font-style:italic;color:#ffe999;font-size:.95rem;margin:12px 0}
+h2{font-family:"Arial Black",sans-serif;margin:0 0 12px;font-size:1.35rem}
+.panel{background:var(--panel);border:1px solid var(--panel-border);border-radius:18px;padding:22px;margin:0 0 18px;box-shadow:0 16px 40px rgba(0,0,0,.4)}
 .mute{color:var(--mute);font-size:.9rem}
 
-input,textarea,select{
-  width:100%;font:inherit;padding:14px 16px;border-radius:12px;
-  border:2px solid rgba(99,134,235,.4);background:rgba(6,12,34,.85);color:var(--paper);
-  margin-bottom:10px;
-}
-input:focus,textarea:focus,select:focus{
-  outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,212,59,.2);
-}
-textarea{min-height:140px;font:13px/1.4 ui-monospace,Menlo,monospace}
+input,textarea,select{width:100%;font:inherit;padding:14px;border-radius:12px;border:2px solid rgba(99,134,235,.4);background:rgba(6,12,34,.85);color:var(--paper);margin-bottom:10px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+textarea{min-height:140px;font:13px/1.4 ui-monospace,monospace}
 
-button{
-  font:inherit;font-weight:900;width:100%;padding:15px 18px;margin:6px 0;border:0;
-  border-radius:12px;
-  background:linear-gradient(180deg, #ffe066 0%, #fcc419 100%);
-  color:#181200;cursor:pointer;
-  box-shadow:0 5px 0 #b88600, 0 8px 20px rgba(0,0,0,.3);
-  text-transform:uppercase;letter-spacing:.03em;
-}
-button:hover{filter:brightness(1.06)}
+button{font:inherit;font-weight:900;width:100%;padding:15px;margin:6px 0;border:0;border-radius:12px;background:linear-gradient(180deg,#ffe066,#fcc419);color:#181200;cursor:pointer;box-shadow:0 5px 0 #b88600;text-transform:uppercase}
 button:active{transform:translateY(3px);box-shadow:0 2px 0 #b88600}
-button.alt{
-  background:rgba(255,255,255,.07);color:var(--paper);
-  border:2px solid rgba(99,134,235,.45);
-  box-shadow:none;text-transform:none;letter-spacing:0;font-weight:700;
-}
-button.danger{
-  background:linear-gradient(180deg, #ff4d58 0%, #d91c28 100%);
-  color:#fff;box-shadow:0 4px 0 #800b13;
-}
-
-button.opt{
-  background:linear-gradient(180deg, rgba(28,50,118,.95), rgba(17,32,82,.95));
-  color:var(--paper);border:2px solid rgba(99,134,235,.45);
-  box-shadow:0 4px 0 rgba(7,13,36,.8);
-  text-align:left;display:flex;align-items:center;gap:14px;padding:14px 16px;
-  text-transform:none;letter-spacing:0;font-weight:700;
-}
-button.opt .letter{
-  background:var(--gold);color:#141414;width:34px;height:34px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:.95rem;flex-shrink:0;
-}
-button.opt:hover{border-color:var(--gold);transform:translateX(4px)}
+button.alt{background:rgba(255,255,255,.07);color:var(--paper);border:2px solid rgba(99,134,235,.45);box-shadow:none;text-transform:none}
+button.danger{background:linear-gradient(180deg,#ff4d58,#d91c28);color:#fff;box-shadow:0 4px 0 #800b13}
+button.opt{background:rgba(28,50,118,.95);color:var(--paper);border:2px solid rgba(99,134,235,.45);text-align:left;display:flex;align-items:center;gap:14px;padding:14px;text-transform:none}
+button.opt .letter{background:var(--gold);color:#141414;width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900}
 
 .clock-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
 .svg-clock{position:relative;width:82px;height:82px;flex-shrink:0}
 .svg-clock svg{transform:rotate(-90deg);width:100%;height:100%}
 .svg-clock circle{fill:rgba(130,12,22,.45);stroke-width:6}
 .svg-clock .bg-ring{stroke:rgba(255,255,255,.15)}
-.svg-clock .fg-ring{stroke:var(--gold);stroke-linecap:round;transition:stroke-dashoffset .2s linear}
-.svg-clock .time-num{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-family:"Arial Black",sans-serif;font-size:1.75rem;color:#fff;
-  text-shadow:0 2px 8px rgba(0,0,0,.6);
-}
-.svg-clock.urgent .fg-ring{stroke:var(--red)}
-
-.q{font-size:1.35rem;font-weight:800;margin:8px 0 18px;line-height:1.35}
+.svg-clock .fg-ring{stroke:var(--gold);stroke-linecap:round}
+.svg-clock .time-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Arial Black",sans-serif;font-size:1.75rem;color:#fff}
+.q{font-size:1.35rem;font-weight:800;margin:8px 0 18px}
 .good{color:var(--ok)}.bad{color:var(--red)}
 
 ol.board{list-style:none;margin:0;padding:0}
-ol.board li{
-  display:flex;gap:10px;align-items:center;padding:11px 12px;
-  border-bottom:1px solid rgba(99,134,235,.22);
-}
-ol.board li:last-child{border-bottom:0}
-ol.board li .rank{
-  width:28px;height:28px;border-radius:50%;background:rgba(7,13,36,.8);
-  display:inline-flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:.82rem;color:var(--mute);flex-shrink:0;
-}
-ol.board li:nth-child(1) .rank{background:linear-gradient(135deg,#ffe066,#f59f00);color:#111}
-ol.board li:nth-child(2) .rank{background:linear-gradient(135deg,#f1f3f5,#adb5bd);color:#111}
-ol.board li:nth-child(3) .rank{background:linear-gradient(135deg,#e8a87c,#b86b35);color:#111}
-ol.board li .av{font-size:1.25rem}
-ol.board li b{flex:1;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-ol.board li .tag{
-  font-size:.68rem;font-weight:800;padding:2px 7px;border-radius:6px;
-  background:rgba(255,255,255,.1);color:var(--gold);text-transform:uppercase;
-}
-ol.board li em{
-  font-style:normal;font-weight:900;color:var(--gold);
-  background:rgba(255,212,59,.12);padding:4px 10px;border-radius:8px;font-size:.95rem;
-}
-ol.board li.me{
-  background:linear-gradient(90deg, rgba(255,212,59,.2), rgba(255,42,56,.15));
-  border-radius:10px;border:1px solid rgba(255,212,59,.5);
-}
-
-.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:24px 0 20px;padding-top:20px}
-.pod-col{flex:1;max-width:160px;text-align:center}
-.pod-av{font-size:2.2rem;margin-bottom:4px}
-.pod-name{font-weight:900;font-size:.95rem;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pod-box{
-  border-radius:12px 12px 0 0;padding:12px 6px;font-family:"Arial Black",sans-serif;
-  color:#111;display:flex;flex-direction:column;justify-content:space-between;
-}
-.pod-1 .pod-box{height:125px;background:linear-gradient(180deg,#ffe066,#f59f00)}
-.pod-2 .pod-box{height:95px;background:linear-gradient(180deg,#f1f3f5,#adb5bd)}
-.pod-3 .pod-box{height:75px;background:linear-gradient(180deg,#e8a87c,#c07038)}
+ol.board li{display:flex;gap:10px;align-items:center;padding:11px;border-bottom:1px solid rgba(99,134,235,.2)}
+ol.board li .rank{width:28px;height:28px;border-radius:50%;background:rgba(7,13,36,.8);display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;color:var(--mute)}
+ol.board li b{flex:1;font-weight:700}
+ol.board li em{font-style:normal;font-weight:900;color:var(--gold);background:rgba(255,212,59,.12);padding:4px 10px;border-radius:8px}
+ol.board li.me{background:rgba(255,212,59,.2);border-radius:10px;border:1px solid rgba(255,212,59,.5)}
 
 .row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(99,134,235,.25)}
-.row:last-child{border-bottom:0}
-.row b{flex:1;font-weight:700}
-.row button{width:auto;padding:7px 13px;margin:0;font-size:.82rem}
+.row b{flex:1}
+.row button{width:auto;padding:7px 13px;margin:0}
 .q-card{background:rgba(7,13,36,.75);border:1px solid rgba(99,134,235,.35);border-radius:12px;padding:14px;margin-bottom:12px}
 .q-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .flex-gap{display:flex;gap:8px}
 .flex-gap button{margin:0}
-
-.is-screen .brand h1{font-size:3.4rem}
-.is-screen .q{font-size:2.45rem;margin:16px 0 26px}
-.is-screen .svg-clock{width:112px;height:112px}
-.is-screen .svg-clock .time-num{font-size:2.4rem}
-.is-screen h2{font-size:2rem}
-.screen-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-.screen-opt{
-  background:linear-gradient(180deg, rgba(28,50,118,.95), rgba(15,28,72,.95));
-  border:2px solid rgba(99,134,235,.5);border-radius:14px;
-  padding:20px 22px;font-size:1.55rem;font-weight:800;display:flex;align-items:center;gap:16px;
-}
-.screen-opt span{
-  background:var(--gold);color:#111;width:44px;height:44px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;
-}
-.lobby-flex{display:flex;gap:28px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.qr-box{background:#fff;padding:14px;border-radius:16px;text-align:center;color:#111}
-.qr-box img{display:block;width:175px;height:175px}
-.player-pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.pill{
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,212,59,.4);
-  padding:8px 15px;border-radius:99px;font-weight:700;display:inline-flex;align-items:center;gap:8px;
-}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:99}
 </style>
 </head>
 <body>
 <canvas id="confetti"></canvas>
-<div id="app"></div>
+<div id="app"><div class="panel" style="text-align:center"><h2>Laden...</h2></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-const CFG = {
-  title: "De Slimste Collega",
-  hostPin: "4827",
-  seconds: 25,
-  firebase: {
-    apiKey: "AIzaSyCJ2vesmFz9u3qysvCCY11_REYR8UZPIBI",
-    authDomain: "de-slimste-collega.firebaseapp.com",
-    databaseURL: "https://de-slimste-collega-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "de-slimste-collega",
-    appId: "1:1029979378205:web:635f25e6eeeb125d5c2cf4"
-  }
-};
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const CFG = {
+      title: "De Slimste Collega",
+      hostPin: "4827",
+      seconds: 25,
+      firebase: {
+        apiKey: "AIzaSyCJ2vesmFz9u3qysvCCY11_REYR8UZPIBI",
+        authDomain: "de-slimste-collega.firebaseapp.com",
+        databaseURL: "https://de-slimste-collega-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "de-slimste-collega",
+        appId: "1:1029979378205:web:635f25e6eeeb125d5c2cf4"
+      }
+    };
 
-const SAMPLE = [
-  {round:"Ronde 1 · 3-6-9", type:"mc", q:"Hoeveel provincies telt Vlaanderen?", options:["3","4","5","6"], correct:2},
-  {round:"Ronde 1 · 3-6-9", type:"open", q:"Welke rivier stroomt dwars door Leuven?", answers:["Dijle","De Dijle"]},
-  {round:"Ronde 2 · Open Deur", type:"mc", q:"Wat is het hoogste punt van België?", options:["Kemmelberg","Signaal van Botrange","Baraque Michel","Vaalserberg"], correct:1},
-  {round:"Ronde 3 · Collectief Geheugen", type:"open", q:"Hoe heet de Belgische nationale mannenvoetbalploeg?", answers:["Rode Duivels","De Rode Duivels"]}
-];
+    const SAMPLE = [
+      {round:"Ronde 1 · 3-6-9", type:"mc", q:"Hoeveel provincies telt Vlaanderen?", options:["3","4","5","6"], correct:2},
+      {round:"Ronde 1 · 3-6-9", type:"open", q:"Welke rivier stroomt dwars door Leuven?", answers:["Dijle","De Dijle"]},
+      {round:"Ronde 2 · Open Deur", type:"mc", q:"Wat is het hoogste punt van België?", options:["Kemmelberg","Signaal van Botrange","Baraque Michel","Vaalserberg"], correct:1}
+    ];
 
-const AVATARS = ["☕","📊","🖨️","📎","🍩","🧠","💼","🚀","🦉","🦊","⚡","🎯","🏆","🍀","🕶️","🍕"];
-const getAvatar = name => {
-  let h = 0;
-  for (let i = 0; i < (name || '').length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
-  return AVATARS[Math.abs(h) % AVATARS.length];
-};
+    const AVATARS = ["☕","📊","🖨️","📎","🍩","🧠","💼","🚀","🦉","🦊","⚡","🎯"];
+    const getAvatar = name => AVATARS[Math.abs([...(name||'')].reduce((acc,c)=>acc+c.charCodeAt(0),0)) % AVATARS.length];
 
-const QUIPS = {
-  lobby: ["“Even de hersencellen opwarmen...”", "“Geen stress, het gaat om de eer!”", "“Wie stiekem Google gebruikt, trakteert op koffiekoeken.”"],
-  wait: ["“Mooi op tijd! Hopen dat het juist is...”", "“Geklikt! Geen weg meer terug.”"],
-  good: ["“Wat een kennis! Promotie waard!”", "“Erik Van Looy zou trots knikken.”"],
-  bad: ["“Oei... dat vertellen we morgen niet bij de koffie.”", "“Helaas volledig fout!”"]
-};
-const pickQuip = (cat, seed = 0) => QUIPS[cat][Math.abs(seed) % QUIPS[cat].length];
+    const isHost = location.hash.toLowerCase().includes('host');
+    const isScreen = location.hash.toLowerCase().includes('scherm');
+    if (isScreen) document.body.classList.add('is-screen');
 
-const SFX = {
-  ctx: null,
-  enabled: true,
-  init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
-  tone(freq, dur, type = 'sine', vol = 0.15, delay = 0) {
-    if (!this.enabled || !isScreen) return;
+    let hostOk = sessionStorage.getItem('hostOk') === '1';
+    let me = JSON.parse(localStorage.getItem('me') || 'null');
+    let game = {phase:'lobby'}, players = {}, answers = {}, curQ = null, aRef = null, revealing = false;
+    let draftName = '', draftAns = '', hostTab = 'visual';
+
+    let db = null;
     try {
-      this.init();
-      const t = this.ctx.currentTime + delay;
-      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-      o.type = type; o.frequency.value = freq;
-      g.gain.setValueAtTime(vol, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-      o.connect(g); g.connect(this.ctx.destination);
-      o.start(t); o.stop(t + dur);
-    } catch(e) {}
-  },
-  newQ() { this.tone(330, 0.18, 'triangle', 0.14, 0); this.tone(440, 0.28, 'triangle', 0.16, 0.12); },
-  tick() { this.tone(920, 0.07, 'triangle', 0.13); },
-  buzzer() { this.tone(145, 0.55, 'sawtooth', 0.22, 0); },
-  reveal() { this.tone(523.25, 0.16, 'triangle', 0.18, 0); this.tone(783.99, 0.38, 'triangle', 0.22, 0.22); },
-  fanfare() { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => this.tone(f, 0.35, 'triangle', 0.2, i * 0.12)); }
-};
+      if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) firebase.initializeApp(CFG.firebase);
+        db = firebase.database();
+      }
+    } catch(e) { console.error("DB error", e); }
 
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+    const now = () => Date.now();
 
-function isCloseMatch(input, validList) {
-  const a = norm(input);
-  if (!a) return false;
-  return validList.some(raw => {
-    const b = norm(raw);
-    if (a === b) return true;
-    if (b.length < 5) return false;
-    const maxDist = b.length >= 8 ? 2 : 1;
-    const dp = Array.from({length: a.length + 1}, (_, i) => [i]);
-    for (let j = 1; j <= b.length; j++) dp[0][j] = j;
-    for (let i = 1; i <= a.length; i++) {
-      for (let j = 1; j <= b.length; j++) {
-        dp[i][j] = Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+    const getQs = () => {
+      try {
+        const s = localStorage.getItem('qs');
+        return s ? JSON.parse(s) : SAMPLE;
+      } catch(e) { return SAMPLE; }
+    };
+    const setQs = list => { localStorage.setItem('qs', JSON.stringify(list)); render(); };
+
+    const calcPts = t => 100 + Math.round(50 * Math.max(0, 1 - t / (CFG.seconds * 1000)));
+    const ranked = () => Object.entries(players).map(([id, p]) => ({id, ...p})).sort((a, b) => (b.score || 0) - (a.score || 0));
+
+    if (db) {
+      db.ref('game').on('value', s => { game = s.val() || {phase:'lobby'}; watch(); render(); });
+      db.ref('players').on('value', s => {
+        players = s.val() || {};
+        if (me && !isHost && !isScreen && !players[me.id] && game.phase !== 'ended') {
+          db.ref('players/' + me.id).set({name: me.name, score: 0, streak: 0});
+        }
+        if (!isHost && !isScreen && game.phase === 'question') return;
+        render();
+      });
+    }
+
+    function watch() {
+      if (!db || game.q === curQ) return;
+      if (aRef) aRef.off();
+      curQ = game.q; answers = {};
+      if (curQ == null) return;
+      if (isHost || isScreen) {
+        aRef = db.ref('answers/' + curQ);
+        aRef.on('value', s => { answers = s.val() || {}; render(); });
+      } else if (me) {
+        aRef = db.ref(`answers/${curQ}/${me.id}`);
+        aRef.on('value', s => { answers = s.val() ? {[me.id]: s.val()} : {}; render(); });
       }
     }
-    return dp[a.length][b.length] <= maxDist;
-  });
-}
 
-// Veilige Firebase & Storage Initialisatie
-let db = null;
-try {
-  if (typeof firebase !== 'undefined') {
-    firebase.initializeApp(CFG.firebase);
-    db = firebase.database();
-  }
-} catch (e) {
-  console.warn("Firebase kon niet worden geladen:", e);
-}
+    window.join = function() {
+      const n = draftName.trim().slice(0, 22);
+      if (!n) return;
+      me = {id: Math.random().toString(36).slice(2, 10), name: n};
+      localStorage.setItem('me', JSON.stringify(me));
+      if (db) db.ref('players/' + me.id).set({name: n, score: 0, streak: 0});
+      watch(); render();
+    };
 
-let offset = 0;
-if (db) {
-  try { db.ref('.info/serverTimeOffset').on('value', s => offset = s.val() || 0); } catch(e){}
-}
-const now = () => Date.now() + offset;
+    window.submit = function(v) {
+      if (!db || !me || game.phase !== 'question' || answers[me.id]) return;
+      if (v === '' || v == null) return;
+      const t = now() - game.startedAt;
+      db.ref(`answers/${game.q}/${me.id}`).set({value: v, t});
+      draftAns = '';
+    };
 
-const isHost = location.hash === '#host';
-const isScreen = location.hash === '#scherm';
-if (isScreen) document.body.classList.add('is-screen');
+    window.startQ = function(i) {
+      if (!db) return;
+      const qs = getQs(), q = qs[i]; if (!q) return;
+      const cur = {round: q.round || '', type: q.type, q: q.q};
+      if (q.type === 'mc') cur.options = q.options;
+      db.ref('game').set({phase: 'question', q: i, total: qs.length, cur, seconds: CFG.seconds, startedAt: firebase.database.ServerValue.TIMESTAMP});
+    };
 
-let hostOk = false;
-try { hostOk = sessionStorage.getItem('hostOk') === '1'; } catch(e){}
-
-let me = null;
-try { me = JSON.parse(localStorage.getItem('me') || 'null'); } catch(e){}
-
-let game = {phase:'lobby'}, players = {}, answers = {}, curQ = null, aRef = null, revealing = false;
-let draftName = '', draftAns = '', hostTab = 'visual', lastTickSec = -1, confettiDone = false;
-
-window.addEventListener('hashchange', () => location.reload());
-
-const getQs = () => {
-  try {
-    const saved = localStorage.getItem('qs');
-    if (!saved) return SAMPLE;
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : SAMPLE;
-  } catch (e) {
-    return SAMPLE;
-  }
-};
-const setQs = list => {
-  try { localStorage.setItem('qs', JSON.stringify(list)); } catch(e){}
-  render();
-};
-
-const calcPts = t => 100 + Math.round(50 * Math.max(0, 1 - t / (CFG.seconds * 1000)));
-const ranked = () => Object.entries(players).map(([id, p]) => ({id, ...p})).sort((a, b) => (b.score || 0) - (a.score || 0));
-
-if (db) {
-  db.ref('game').on('value', s => {
-    const prevPhase = game.phase, prevQ = game.q;
-    game = s.val() || {phase:'lobby'};
-    if (game.phase === 'question' && (prevPhase !== 'question' || prevQ !== game.q)) SFX.newQ();
-    if (prevPhase === 'question' && game.phase === 'reveal') SFX.reveal();
-    if (game.phase === 'ended' && !confettiDone) { confettiDone = true; SFX.fanfare(); launchConfetti(); }
-    if (game.phase === 'lobby') confettiDone = false;
-    watch();
-    render();
-  });
-
-  db.ref('players').on('value', s => {
-    players = s.val() || {};
-    if (me && !isHost && !isScreen && !players[me.id] && game.phase !== 'ended') {
-      db.ref('players/' + me.id).set({name: me.name, score: 0, streak: 0});
-    }
-    if (!isHost && !isScreen && game.phase === 'question') return;
-    render();
-  });
-}
-
-function watch() {
-  if (!db || game.q === curQ) return;
-  if (aRef) aRef.off();
-  curQ = game.q; answers = {}; lastTickSec = -1;
-  if (curQ == null) return;
-  if (isHost || isScreen) {
-    aRef = db.ref('answers/' + curQ);
-    aRef.on('value', s => {
-      answers = s.val() || {};
-      const totalPlayers = Object.keys(players).length;
-      if (isHost && hostOk && game.phase === 'question' && totalPlayers > 0 && Object.keys(answers).length >= totalPlayers) {
-        setTimeout(() => reveal(), 600);
+    window.reveal = async function() {
+      if (!db || revealing || game.phase !== 'question') return;
+      revealing = true;
+      const q = getQs()[game.q];
+      const all = (await db.ref('answers/' + game.q).once('value')).val() || {};
+      const ups = {};
+      for (const [pid, p] of Object.entries(players)) {
+        const a = all[pid];
+        const ok = a ? (q.type === 'mc' ? Number(a.value) === Number(q.correct) : (q.answers || []).some(x => x.toLowerCase() === String(a.value).toLowerCase().trim())) : false;
+        const pts = ok ? calcPts(a.t) : 0;
+        if (a) { ups[`${game.q}/${pid}/ok`] = ok; ups[`${game.q}/${pid}/pts`] = pts; }
+        db.ref(`players/${pid}`).transaction(cur => {
+          if (!cur) return cur;
+          cur.score = (cur.score || 0) + pts;
+          return cur;
+        });
       }
-      render();
-    });
-  } else if (me) {
-    aRef = db.ref(`answers/${curQ}/${me.id}`);
-    aRef.on('value', s => { answers = s.val() ? {[me.id]: s.val()} : {}; render(); });
-  }
-}
+      if (Object.keys(ups).length) await db.ref('answers').update(ups);
+      await db.ref('game').update({phase: 'reveal', correct: q.type === 'mc' ? q.options[q.correct] : q.answers[0]});
+      revealing = false;
+    };
 
-function join() {
-  const n = draftName.trim().slice(0, 22);
-  if (!n) return;
-  me = {id: Math.random().toString(36).slice(2, 10), name: n};
-  try { localStorage.setItem('me', JSON.stringify(me)); } catch(e){}
-  if (db) db.ref('players/' + me.id).set({name: n, score: 0, streak: 0});
-  watch(); render();
-}
+    window.checkPin = function() {
+      const pin = document.getElementById('pin');
+      if (pin && pin.value === CFG.hostPin) {
+        sessionStorage.setItem('hostOk', '1');
+        hostOk = true;
+        render();
+      } else alert('Verkeerde pincode');
+    };
 
-function submit(v) {
-  if (!db || !me || game.phase !== 'question' || answers[me.id]) return;
-  if (v === '' || v == null) return;
-  const t = now() - game.startedAt;
-  if (t > game.seconds * 1000 + 2000) return;
-  db.ref(`answers/${game.q}/${me.id}`).set({value: v, t});
-  draftAns = '';
-}
+    window.addQ = () => { const qs = getQs(); qs.push({round:"Ronde", type:"mc", q:"Nieuwe vraag...", options:["A","B","C","D"], correct:0}); setQs(qs); };
+    window.delQ = i => { const qs = getQs(); qs.splice(i,1); setQs(qs); };
+    window.updateQField = (i, f, v) => { const qs = getQs(); qs[i][f] = v; localStorage.setItem('qs', JSON.stringify(qs)); if(f==='type') render(); };
+    window.updateOpt = (i, oi, v) => { const qs = getQs(); qs[i].options[oi] = v; localStorage.setItem('qs', JSON.stringify(qs)); };
 
-function startQ(i) {
-  if (!db) return;
-  const qs = getQs(), q = qs[i]; if (!q) return;
-  const cur = {round: q.round || '', type: q.type, q: q.q};
-  if (q.type === 'mc') cur.options = q.options;
-  db.ref('game').set({
-    phase: 'question',
-    q: i,
-    total: qs.length,
-    cur,
-    seconds: CFG.seconds,
-    startedAt: firebase.database.ServerValue.TIMESTAMP
-  });
-}
-
-async function reveal() {
-  if (!db || revealing || game.phase !== 'question') return;
-  revealing = true;
-  const q = getQs()[game.q];
-  const all = (await db.ref('answers/' + game.q).once('value')).val() || {};
-  const ups = {}, tasks = [];
-  for (const [pid, p] of Object.entries(players)) {
-    const a = all[pid];
-    const ok = a ? (q.type === 'mc' ? Number(a.value) === Number(q.correct) : isCloseMatch(a.value, q.answers || [])) : false;
-    const pts = ok ? calcPts(a.t) : 0;
-    if (a) {
-      ups[`${game.q}/${pid}/ok`] = ok;
-      ups[`${game.q}/${pid}/pts`] = pts;
+    function head() {
+      return `<div class="brand"><div class="brand-sub">★ De Grote Kantoor Quiz ★</div><h1>De <span>Slimste</span> Collega</h1></div>`;
     }
-    tasks.push(db.ref(`players/${pid}`).transaction(cur => {
-      if (!cur) return cur;
-      cur.score = (cur.score || 0) + pts;
-      cur.streak = ok ? (cur.streak || 0) + 1 : 0;
-      return cur;
-    }));
-  }
-  if (Object.keys(ups).length) await db.ref('answers').update(ups);
-  await Promise.all(tasks);
-  await db.ref('game').update({
-    phase: 'reveal',
-    correct: q.type === 'mc' ? q.options[q.correct] : q.answers[0]
-  });
-  revealing = false;
-}
 
-async function toggle(pid) {
-  if (!db) return;
-  const a = answers[pid]; if (!a) return;
-  const ok = !a.ok, pts = ok ? calcPts(a.t) : 0;
-  await db.ref(`answers/${game.q}/${pid}`).update({ok, pts});
-  db.ref(`players/${pid}`).transaction(cur => {
-    if (!cur) return cur;
-    cur.score = (cur.score || 0) + pts - (a.pts || 0);
-    cur.streak = ok ? (cur.streak || 0) + 1 : 0;
-    return cur;
-  });
-}
-
-function kickPlayer(pid) { if (db) db.ref('players/' + pid).remove(); }
-const endGame = () => { if (db) db.ref('game').update({phase:'ended'}); };
-
-function newGame() {
-  if (!db) return;
-  if (confirm('Nieuw spel starten? Alle spelers en scores worden gewist.')) {
-    db.ref().update({game:null, answers:null, players:null});
-  }
-}
-
-function checkPin() {
-  const pinInput = $('#pin');
-  if (pinInput && pinInput.value === CFG.hostPin) {
-    try { sessionStorage.setItem('hostOk', '1'); } catch(e){}
-    hostOk = true; render();
-  } else {
-    alert('Verkeerde pincode');
-  }
-}
-
-function addQ() {
-  const qs = getQs();
-  qs.push({round:"Nieuwe Ronde", type:"mc", q:"Nieuwe vraag...", options:["Optie A","Optie B","Optie C","Optie D"], correct:0});
-  setQs(qs);
-}
-function delQ(idx) { const qs = getQs(); qs.splice(idx, 1); setQs(qs); }
-function moveQ(idx, dir) {
-  const qs = getQs();
-  if (idx + dir < 0 || idx + dir >= qs.length) return;
-  [qs[idx], qs[idx + dir]] = [qs[idx + dir], qs[idx]];
-  setQs(qs);
-}
-function updateQField(idx, field, val) {
-  const qs = getQs();
-  qs[idx][field] = val;
-  if (field === 'type') {
-    if (val === 'mc' && !qs[idx].options) { qs[idx].options = ["Optie A","Optie B","Optie C","Optie D"]; qs[idx].correct = 0; }
-    if (val === 'open' && !qs[idx].answers) { qs[idx].answers = ["Antwoord"]; }
-  }
-  try { localStorage.setItem('qs', JSON.stringify(qs)); } catch(e){}
-  if (field === 'type') render();
-}
-function updateOpt(idx, optIdx, val) {
-  const qs = getQs();
-  qs[idx].options[optIdx] = val;
-  try { localStorage.setItem('qs', JSON.stringify(qs)); } catch(e){}
-}
-function saveJsonQs() {
-  try {
-    const v = JSON.parse($('#qs-json').value);
-    if (!Array.isArray(v)) throw 0;
-    setQs(v);
-    alert(v.length + ' vragen opgeslagen!');
-  } catch (e) {
-    alert('Ongeldige JSON. Controleer de haakjes en aanhalingstekens.');
-  }
-}
-
-function head() {
-  return `<div class="brand">
-    <div class="brand-sub">★ De Grote Kantoor Quiz ★</div>
-    <h1>De <span>Slimste</span> Collega</h1>
-  </div>`;
-}
-
-function podiumHtml() {
-  const r = ranked();
-  if (r.length < 2) return '';
-  const order = [r[1], r[0], r[2]].filter(Boolean);
-  const classes = r.length >= 3 ? ['pod-2', 'pod-1', 'pod-3'] : ['pod-2', 'pod-1'];
-  const medals = r.length >= 3 ? ['🥈 2e', '👑 1e', '🥉 3e'] : ['🥈 2e', '👑 1e'];
-  return `<div class="podium">${order.map((p, idx) => `
-    <div class="pod-col ${classes[idx]}">
-      <div class="pod-av">${getAvatar(p.name)}</div>
-      <div class="pod-name">${esc(p.name)}</div>
-      <div class="pod-box">
-        <strong>${medals[idx]}</strong>
-        <span>${p.score || 0} sec</span>
-      </div>
-    </div>`).join('')}</div>`;
-}
-
-function board(n = 15) {
-  const r = ranked();
-  let h = r.slice(0, n).map((p, i) => {
-    let badge = '';
-    if (i === 0 && (p.score || 0) > 0) badge = `<span class="tag">👑 Slimste</span>`;
-    else if ((p.streak || 0) >= 2) badge = `<span class="tag">🔥 ${p.streak}x op rij</span>`;
-    else if (i === r.length - 1 && r.length > 3 && game.q > 0) badge = `<span class="tag">☕ Koffie nodig?</span>`;
-
-    return `<li class="${me && p.id === me.id ? 'me' : ''}">
-      <span class="rank">${i + 1}</span>
-      <span class="av">${getAvatar(p.name)}</span>
-      <b>${esc(p.name)} ${badge}</b>
-      <em>${p.score || 0} sec</em>
-    </li>`;
-  }).join('');
-  return `<div class="panel"><ol class="board">${h || '<li class="mute">Nog geen spelers</li>'}</ol></div>`;
-}
-
-function timerHtml() {
-  const r = 34, circ = 2 * Math.PI * r;
-  return `<div class="svg-clock" id="clockBox">
-    <svg viewBox="0 0 80 80">
-      <circle class="bg-ring" cx="40" cy="40" r="${r}"></circle>
-      <circle class="fg-ring" id="ring" cx="40" cy="40" r="${r}" stroke-dasharray="${circ}" stroke-dashoffset="0"></circle>
-    </svg>
-    <div class="time-num" id="sec">${CFG.seconds}</div>
-  </div>`;
-}
-
-function qHead(c) {
-  return `<div class="clock-header">
-    <div>
-      ${c?.round ? `<div class="badge">${esc(c.round)}</div>` : ''}
-      <p class="mute" style="margin:0">Vraag <b>${game.q + 1}</b> van ${game.total}</p>
-    </div>
-    ${timerHtml()}
-  </div>`;
-}
-
-function render() {
-  try {
-    const appEl = document.querySelector('#app');
-    if (!appEl) return;
-    if (isScreen) { appEl.innerHTML = head() + screenView(); updateTimerUI(); return; }
-    if (isHost) { appEl.innerHTML = head() + (hostOk ? hostView() : pinView()); updateTimerUI(); return; }
-    appEl.innerHTML = head() + (me ? playerView() : joinView());
-    const i = document.querySelector('#ans'); if (i) i.value = draftAns;
-    updateTimerUI();
-  } catch (err) {
-    console.error("Render error:", err);
-  }
-}
-
-function pinView() {
-  return `<div class="panel"><h2>Hostscherm</h2><p class="mute">Voer de pincode in om de quiz te leiden.</p><input id="pin" type="password" inputmode="numeric" placeholder="Pincode" onkeydown="if(event.key==='Enter')checkPin()"><button onclick="checkPin()">Open Studio</button></div>`;
-}
-
-function joinView() {
-  return `<div class="panel">
-    <h2>Stap de studio binnen</h2>
-    <p class="mute">Kies je naam (en krijg automatisch je kantoor-avatar).</p>
-    <input id="nm" maxlength="22" placeholder="Jouw voornaam" value="${esc(draftName)}" oninput="draftName=this.value" onkeydown="if(event.key==='Enter')join()">
-    <button onclick="join()">Ik doe mee!</button>
-  </div>`;
-}
-
-function playerView() {
-  const ph = game.phase, a = me && answers[me.id];
-  if (ph === 'lobby') {
-    return `<div class="panel" style="text-align:center">
-      <div style="font-size:3rem;margin-bottom:6px">${getAvatar(me.name)}</div>
-      <h2>Welkom, ${esc(me.name)}!</h2>
-      <div class="host-quip">${pickQuip('lobby', me.name.length)}</div>
-      <p class="mute">${Object.keys(players).length} collega's zitten klaar in de studio</p>
-    </div>`;
-  }
-  if (ph === 'question') {
-    const c = game.cur;
-    let body;
-    if (a) {
-      body = `<div style="text-align:center;padding:16px 0">
-        <div style="font-size:2.4rem">🔒</div>
-        <p class="good" style="font-size:1.2rem;margin:6px 0"><b>Antwoord verzonden!</b></p>
-        <div class="host-quip">${pickQuip('wait', game.q + me.name.length)}</div>
-      </div>`;
-    } else if (c.type === 'mc') {
-      body = c.options.map((o, i) => `<button class="opt" onclick="submit(${i})"><span class="letter">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('');
-    } else {
-      body = `<input id="ans" autocomplete="off" placeholder="Typ hier je antwoord..." oninput="draftAns=this.value" onkeydown="if(event.key==='Enter')submit(this.value.trim())"><button onclick="submit($('#ans').value.trim())">Verstuur antwoord</button>`;
+    function board(n = 15) {
+      const r = ranked();
+      let h = r.slice(0, n).map((p, i) => `
+        <li class="${me && p.id === me.id ? 'me' : ''}">
+          <span class="rank">${i + 1}</span>
+          <span>${getAvatar(p.name)}</span>
+          <b>${p.name}</b>
+          <em>${p.score || 0} sec</em>
+        </li>`).join('');
+      return `<div class="panel"><ol class="board">${h || '<li class="mute">Nog geen spelers in de lobby</li>'}</ol></div>`;
     }
-    return `<div class="panel">${qHead(c)}<div class="q">${esc(c.q)}</div>${body}</div>`;
+
+    function render() {
+      const appEl = document.getElementById('app');
+      if (!appEl) return;
+
+      if (isScreen) {
+        const np = Object.keys(players).length;
+        const joinUrl = location.origin + location.pathname;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(joinUrl)}`;
+        
+        if (game.phase === 'lobby') {
+          appEl.innerHTML = head() + `<div class="panel"><h2>Scan de QR-code om mee te spelen!</h2><p style="color:var(--gold);font-weight:bold">${joinUrl}</p><div style="text-align:center;margin:15px"><img src="${qrUrl}" style="background:#fff;padding:10px;border-radius:12px;width:180px"></div><p>${np} spelers verbonden: ${ranked().map(p=>p.name).join(', ') || 'nog niemand'}</p></div>`;
+        } else if (game.phase === 'question') {
+          appEl.innerHTML = head() + `<div class="panel"><div class="q">${game.cur.q}</div><p class="mute">${Object.keys(answers).length} van ${np} hebben geantwoord</p></div>`;
+        } else {
+          appEl.innerHTML = head() + `<div class="panel"><h2>Tussenstand</h2></div>` + board(15);
+        }
+        return;
+      }
+
+      if (isHost) {
+        if (!hostOk) {
+          appEl.innerHTML = head() + `<div class="panel"><h2>Hostscherm</h2><input id="pin" type="password" placeholder="Pincode"><button onclick="checkPin()">Open</button></div>`;
+        } else if (game.phase === 'lobby') {
+          const qs = getQs();
+          appEl.innerHTML = head() + `<div class="panel"><h2>Regiekamer</h2><button onclick="startQ(0)">Start Spel</button></div><div class="panel"><h2>Vragen Bewerken</h2>${qs.map((q,i)=>`<div class="q-card"><input value="${q.q}" oninput="updateQField(${i},'q',this.value)"></div>`).join('')}<button class="alt" onclick="addQ()">+ Vraag</button></div>`;
+        } else if (game.phase === 'question') {
+          appEl.innerHTML = head() + `<div class="panel"><h2>Vraag bezig</h2><button onclick="reveal()">Toon Antwoord</button></div>`;
+        } else {
+          appEl.innerHTML = head() + `<div class="panel"><h2>Uitslag</h2><button onclick="startQ(${game.q+1})">Volgende</button></div>` + board();
+        }
+        return;
+      }
+
+      // Speler scherm
+      if (!me) {
+        appEl.innerHTML = head() + `<div class="panel"><h2>Meespelen</h2><input maxlength="22" placeholder="Jouw voornaam" oninput="draftName=this.value" onkeydown="if(event.key==='Enter')join()"><button onclick="join()">Start</button></div>`;
+      } else if (game.phase === 'lobby') {
+        appEl.innerHTML = head() + `<div class="panel" style="text-align:center"><h2>Welkom ${me.name}!</h2><p class="mute">Wacht op de quizmaster...</p></div>`;
+      } else if (game.phase === 'question') {
+        const c = game.cur;
+        let body = answers[me.id] ? `<p class="good"><b>Antwoord verzonden!</b></p>` : (c.type === 'mc' ? c.options.map((o,i)=>`<button class="opt" onclick="submit(${i})"><span class="letter">${'ABCD'[i]}</span>${o}</button>`).join('') : `<input placeholder="Jouw antwoord" oninput="draftAns=this.value"><button onclick="submit(document.querySelector('input').value)">Verstuur</button>`);
+        appEl.innerHTML = head() + `<div class="panel"><div class="q">${c.q}</div>${body}</div>`;
+      } else {
+        appEl.innerHTML = head() + `<div class="panel"><h2>Ronde afgelopen</h2></div>` + board();
+      }
+    }
+
+    render();
+  } catch(err) {
+    document.getElementById('app').innerHTML = `<div class="panel"><h2>Fout</h2><p>${err.message}</p></div>`;
   }
-  if (ph === 'reveal') {
-    const res = !a
-      ? `<p class="bad"><b>Te laat! Geen antwoord gegeven.</b></p>`
-      : a.ok
-        ? `<p class="good" style="font-size:1.15rem"><b>✓ Juist! +${a.pts} seconden verdiend</b></p><div class="host-quip">${pickQuip('good', game.q)}</div>`
-        : `<p class="bad"><b>✕ Helaas, fout!</b> (Jouw gok: ${esc(game.cur.type === 'mc' ? game.cur.options[a.value] : a.value)})</p><div class="host-quip">${pickQuip('bad', game.q)}</div>`;
-    return `<div class="panel">
-      <div class="badge">${esc(game.cur.round || 'Uitslag')}</div>
-      <div class="q">${esc(game.cur.q)}</div>
-      <p>Juist antwoord: <b class="good" style="font-size:1.15rem">${esc(game.correct)}</b></p>
-      ${res}
-    </div><h2>Tussenstand</h2>${board(15)}`;
-  }
-  return `<h2>Eindstand — De Slimste Collega</h2>${podiumHtml()}${board(15)}`;
-}
-
-function screenView() {
-  const ph = game.phase, np = Object.keys(players).length;
-  const joinUrl = location.origin + location.pathname;
-  if (ph === 'lobby') {
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(joinUrl)}`;
-    return `<div class="panel">
-      <div class="lobby-flex">
-        <div style="flex:1;min-width:280px">
-          <div class="badge">Live Studio · Wachtkamer</div>
-          <h2>Scan de QR-code en speel mee!</h2>
-          <p style="font-size:1.35rem;color:var(--gold);font-weight:900;word-break:break-all;margin:6px 0">${esc(joinUrl)}</p>
-          <div class="host-quip">${pickQuip('lobby', np)}</div>
-          <p class="mute" style="margin-top:14px"><b>${np}</b> collega${np === 1 ? '' : "'s"} in de studio:</p>
-          <div class="player-pills">${ranked().map(p => `<span class="pill">${getAvatar(p.name)} ${esc(p.name)}</span>`).join('') || '<span class="mute">Wachten op de eerste kandidaten...</span>'}</div>
-        </div>
-        <div class="qr-box">
-          <img src="${qrUrl}" alt="QR Code">
-          <small style="font-weight:900;display:block;margin-top:8px;text-transform:uppercase">Scan met camera</small>
-        </div>
-      </div>
-      <div style="text-align:right;margin-top:12px">
-        <button class="alt" style="width:auto;padding:8px 14px;font-size:.85rem" onclick="SFX.enabled=!SFX.enabled;render()">🔊 Studio-geluid: ${SFX.enabled ? 'AAN' : 'UIT'}</button>
-      </div>
-    </div>`;
-  }
-  if (ph === 'question') {
-    const c = game.cur;
-    const opts = c.type === 'mc'
-      ? `<div class="screen-grid">${c.options.map((o, i) => `<div class="screen-opt"><span>${'ABCD'[i]}</span>${esc(o)}</div>`).join('')}</div>`
-      : `<div class="host-quip" style="font-size:1.2rem">Open vraag — typ het juiste antwoord op je smartphone!</div>`;
-    return `<div class="panel">${qHead(c)}<div class="q">${esc(c.q)}</div>${opts}<p class="mute" style="margin-top:22px;font-size:1.15rem"><b>${Object.keys(answers).length}</b> van <b>${np}</b> collega's hebben geantwoord</p></div>`;
-  }
-  if (ph === 'reveal') {
-    return `<div class="panel">
-      <div class="badge">${esc(game.cur.round || 'Antwoord')}</div>
-      <div class="q">${esc(game.cur.q)}</div>
-      <p style="font-size:1.8rem;margin:10px 0">Juist antwoord: <b class="good">${esc(game.correct)}</b></p>
-    </div><h2>Tussenstand</h2>${board(15)}`;
-  }
-  return `<h2>Eindstand — De Slimste Collega</h2>${podiumHtml()}${board(15)}`;
-}
-
-function hostView() {
-  const ph = game.phase, qs = getQs(), np = Object.keys(players).length;
-  if (ph === 'lobby') {
-    const playerRows = ranked().map(p => `<div class="row"><span>${getAvatar(p.name)}</span><b>${esc(p.name)}</b><button class="danger" onclick="kickPlayer('${p.id}')">Verwijder</button></div>`).join('') || '<p class="mute">Nog geen spelers aangemeld.</p>';
-
-    const editorHtml = hostTab === 'visual'
-      ? qs.map((q, i) => `
-        <div class="q-card">
-          <div class="q-card-head">
-            <b>Vraag ${i + 1}</b>
-            <div class="flex-gap">
-              <button class="alt" style="padding:4px 8px;width:auto" onclick="moveQ(${i},-1)">↑</button>
-              <button class="alt" style="padding:4px 8px;width:auto" onclick="moveQ(${i},1)">↓</button>
-              <button class="danger" style="padding:4px 8px;width:auto" onclick="delQ(${i})">✕</button>
-            </div>
-          </div>
-          <input placeholder="Ronde naam" value="${esc(q.round || '')}" oninput="updateQField(${i},'round',this.value)">
-          <select onchange="updateQField(${i},'type',this.value)">
-            <option value="mc" ${q.type === 'mc' ? 'selected' : ''}>Meerkeuze (A/B/C/D)</option>
-            <option value="open" ${q.type === 'open' ? 'selected' : ''}>Open vraag</option>
-          </select>
-          <input placeholder="De vraag" value="${esc(q.q)}" oninput="updateQField(${i},'q',this.value)">
-          ${q.type === 'mc'
-            ? (q.options || []).map((o, oi) => `
-              <div class="flex-gap" style="align-items:center">
-                <input type="radio" name="corr_${i}" style="width:auto;margin:0" ${Number(q.correct) === oi ? 'checked' : ''} onchange="updateQField(${i},'correct',${oi})">
-                <input style="margin-bottom:4px" placeholder="Optie ${'ABCD'[oi]}" value="${esc(o)}" oninput="updateOpt(${i},${oi},this.value)">
-              </div>`).join('')
-            : `<input placeholder="Geldige antwoorden (komma gescheiden)" value="${esc((q.answers || []).join(', '))}" oninput="updateQField(${i},'answers',this.value.split(',').map(s=>s.trim()).filter(Boolean))">`
-          }
-        </div>`).join('') + `<button class="alt" onclick="addQ()">+ Vraag toevoegen</button>`
-      : `<textarea id="qs-json">${esc(JSON.stringify(qs, null, 2))}</textarea><button class="alt" onclick="saveJsonQs()">JSON opslaan</button>`;
-
-    return `
-      <div class="panel">
-        <h2>Regiekamer</h2>
-        <p class="mute">Zet op het grote scherm: <b>${esc(location.origin + location.pathname)}#scherm</b></p>
-        <button onclick="startQ(0)" ${qs.length ? '' : 'disabled'}>Start Vraag 1 van ${qs.length}</button>
-      </div>
-      <div class="panel">
-        <h2>Kandidaten (${np})</h2>
-        ${playerRows}
-      </div>
-      <div class="panel">
-        <div class="flex-gap" style="margin-bottom:12px">
-          <button class="${hostTab === 'visual' ? '' : 'alt'}" onclick="hostTab='visual';render()">Makkelijke Editor</button>
-          <button class="${hostTab === 'json' ? '' : 'alt'}" onclick="hostTab='json';render()">JSON Code</button>
-        </div>
-        ${editorHtml}
-      </div>`;
-  }
-
-  const q = qs[game.q] || {};
-  const corr = q.type === 'mc' ? (q.options || [])[q.correct] : (q.answers || [])[0];
-
-  if (ph === 'question') {
-    return `<div class="panel">
-      ${qHead(game.cur)}
-      <div class="q">${esc(game.cur.q)}</div>
-      <p class="mute">Juist antwoord: <b class="good">${esc(corr)}</b></p>
-      <p><b>${Object.keys(answers).length}</b> van <b>${np}</b> hebben geantwoord</p>
-      <button onclick="reveal()">Toon antwoord nu</button>
-    </div>`;
-  }
-
-  if (ph === 'reveal') {
-    const rows = Object.entries(answers).map(([pid, a]) => {
-      const lbl = q.type === 'mc' ? (q.options[a.value] ?? a.value) : a.value;
-      return `<div class="row">
-        <b>${esc(players[pid] ? players[pid].name : '?')}</b>
-        <span class="mute">${esc(lbl)}</span>
-        <button class="${a.ok ? '' : 'alt'}" onclick="toggle('${pid}')">${a.ok ? '✓ Juist' : '✕ Fout'}</button>
-      </div>`;
-    }).join('') || '<p class="mute">Niemand heeft geantwoord.</p>';
-
-    const last = game.q + 1 >= game.total;
-    return `<div class="panel">
-      <div class="badge">${esc(game.cur.round || 'Uitslag')}</div>
-      <div class="q">${esc(game.cur.q)}</div>
-      <p>Juist antwoord: <b class="good">${esc(game.correct)}</b></p>
-      ${rows}
-      <p class="mute" style="margin-top:10px">Klik op Juist/Fout om handmatig bij te sturen.</p>
-      ${last ? '<button onclick="endGame()">Toon Ere-podium & Eindstand</button>' : `<button onclick="startQ(${game.q + 1})">Volgende vraag (${game.q + 2}/${game.total})</button>`}
-    </div>${board(15)}`;
-  }
-
-  return `<h2>Eindstand</h2>${podiumHtml()}${board(15)}<button class="danger" onclick="newGame()">Alles wissen & nieuw spel</button>`;
-}
-
-function updateTimerUI() {
-  if (game.phase !== 'question' || !game.startedAt) return;
-  const totalMs = game.seconds * 1000;
-  const left = Math.max(0, totalMs - (now() - game.startedAt));
-  const secLeft = Math.ceil(left / 1000);
-  const s = $('#sec'), ring = $('#ring'), box = $('#clockBox');
-  const circ = 2 * Math.PI * 34;
-
-  if (s) s.textContent = secLeft > 0 ? secLeft : '0';
-  if (ring) ring.style.strokeDashoffset = circ * (1 - left / totalMs);
-  if (box) box.classList.toggle('urgent', secLeft > 0 && secLeft <= 5);
-
-  if (secLeft !== lastTickSec) {
-    lastTickSec = secLeft;
-    if (secLeft > 0 && secLeft <= 5) SFX.tick();
-    if (secLeft === 0) SFX.buzzer();
-  }
-
-  if (isHost && hostOk && left === 0 && now() - game.startedAt > totalMs + 1200) {
-    reveal();
-  }
-}
-setInterval(updateTimerUI, 150);
-
-function launchConfetti() {
-  const c = $('#confetti'), ctx = c.getContext('2d');
-  c.width = window.innerWidth; c.height = window.innerHeight;
-  const pieces = Array.from({length: 160}, () => ({
-    x: Math.random() * c.width, y: Math.random() * -c.height,
-    w: Math.random() * 8 + 5, h: Math.random() * 12 + 6,
-    d: Math.random() * 3.5 + 2, rot: Math.random() * 360,
-    color: ['#ffd43b','#ff2a38','#2ce69b','#ffffff','#4dabf7'][Math.floor(Math.random()*5)]
-  }));
-  let frames = 0;
-  function draw() {
-    ctx.clearRect(0, 0, c.width, c.height);
-    pieces.forEach(p => {
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI / 180);
-      ctx.fillStyle = p.color;
-      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-      ctx.restore();
-      p.y += p.d; p.x += Math.sin(p.y / 25) * 1.5; p.rot += 4;
-      if (p.y > c.height) p.y = -15;
-    });
-    if (++frames < 300) requestAnimationFrame(draw);
-    else ctx.clearRect(0, 0, c.width, c.height);
-  }
-  draw();
-}
-
-// Direct uitvoeren bij laden
-render();
+});
 </script>
 </body>
 </html>
