@@ -2,80 +2,420 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>De Slimste Collega</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>De Slimste Collega — Studio Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#070d24;
-  --panel:rgba(16, 29, 74, 0.9);
-  --panel-border:rgba(99, 134, 235, 0.4);
-  --paper:#f7f9ff;
-  --red:#ff2a38;
-  --red-glow:rgba(255, 42, 56, 0.55);
-  --gold:#ffd43b;
-  --gold-glow:rgba(255, 212, 59, 0.45);
-  --ok:#2ce69b;
-  --mute:#9cb0e8;
+:root {
+  --bg: #090a0f;
+  --surface: #121520;
+  --surface-hover: #191d2c;
+  --border: #22273b;
+  --border-focus: #3b456b;
+  --text-main: #f1f3f9;
+  --text-muted: #8b95b7;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-elevation: 0 10px 30px -10px rgba(0,0,0,0.5);
+  --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--paper);
-  font:17px/1.45 "Helvetica Neue",system-ui,sans-serif;min-height:100vh;overflow-x:hidden;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background-color: var(--bg);
+  color: var(--text-main);
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: hidden;
 }
-#app{max-width:560px;margin:0 auto;padding:22px 16px 70px}
-body.is-screen #app{max-width:1040px;padding:30px 28px}
 
-.brand{text-align:center;margin-bottom:22px}
-.brand-sub{display:inline-block;font-size:.72rem;font-weight:900;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
-.brand h1{font-family:"Arial Black","Impact",sans-serif;margin:0;font-size:2.25rem;text-transform:uppercase;color:#fff;text-shadow:0 0 24px var(--red-glow),0 4px 0 #7a0c14}
-.brand h1 span{color:var(--gold)}
-.badge{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-weight:900;font-size:.75rem;text-transform:uppercase;padding:5px 12px;border-radius:99px;margin-bottom:10px}
-.host-quip{background:rgba(255,212,59,0.12);border-left:4px solid var(--gold);padding:10px 14px;border-radius:0 10px 10px 0;font-style:italic;color:#ffe999;font-size:.95rem;margin:12px 0}
-h2{font-family:"Arial Black",sans-serif;margin:0 0 12px;font-size:1.35rem}
-.panel{background:var(--panel);border:1px solid var(--panel-border);border-radius:18px;padding:22px;margin:0 0 18px;box-shadow:0 16px 40px rgba(0,0,0,.4)}
-.mute{color:var(--mute);font-size:.9rem}
+/* Subtiele achtergrond glow */
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
 
-input,textarea,select{width:100%;font:inherit;padding:14px;border-radius:12px;border:2px solid rgba(99,134,235,.4);background:rgba(6,12,34,.85);color:var(--paper);margin-bottom:10px}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
-textarea{min-height:140px;font:13px/1.4 ui-monospace,monospace}
+#app {
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-button{font:inherit;font-weight:900;width:100%;padding:15px;margin:6px 0;border:0;border-radius:12px;background:linear-gradient(180deg,#ffe066,#fcc419);color:#181200;cursor:pointer;box-shadow:0 5px 0 #b88600;text-transform:uppercase}
-button:active{transform:translateY(3px);box-shadow:0 2px 0 #b88600}
-button.alt{background:rgba(255,255,255,.07);color:var(--paper);border:2px solid rgba(99,134,235,.45);box-shadow:none;text-transform:none}
-button.danger{background:linear-gradient(180deg,#ff4d58,#d91c28);color:#fff;box-shadow:0 4px 0 #800b13}
-button.opt{background:rgba(28,50,118,.95);color:var(--paper);border:2px solid rgba(99,134,235,.45);text-align:left;display:flex;align-items:center;gap:14px;padding:14px;text-transform:none}
-button.opt .letter{background:var(--gold);color:#141414;width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900}
+body.is-screen #app {
+  max-width: 1100px;
+  padding: 48px 32px;
+}
 
-.clock-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
-.svg-clock{position:relative;width:82px;height:82px;flex-shrink:0}
-.svg-clock svg{transform:rotate(-90deg);width:100%;height:100%}
-.svg-clock circle{fill:rgba(130,12,22,.45);stroke-width:6}
-.svg-clock .bg-ring{stroke:rgba(255,255,255,.15)}
-.svg-clock .fg-ring{stroke:var(--gold);stroke-linecap:round}
-.svg-clock .time-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Arial Black",sans-serif;font-size:1.75rem;color:#fff}
-.q{font-size:1.35rem;font-weight:800;margin:8px 0 18px}
-.good{color:var(--ok)}.bad{color:var(--red)}
+/* Header & Branding */
+.brand {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #818cf8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 12px;
+}
+.brand h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+.brand h1 span {
+  color: var(--primary);
+}
 
-ol.board{list-style:none;margin:0;padding:0}
-ol.board li{display:flex;gap:10px;align-items:center;padding:11px;border-bottom:1px solid rgba(99,134,235,.2)}
-ol.board li .rank{width:28px;height:28px;border-radius:50%;background:rgba(7,13,36,.8);display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;color:var(--mute)}
-ol.board li b{flex:1;font-weight:700}
-ol.board li em{font-style:normal;font-weight:900;color:var(--gold);background:rgba(255,212,59,.12);padding:4px 10px;border-radius:8px}
-ol.board li.me{background:rgba(255,212,59,.2);border-radius:10px;border:1px solid rgba(255,212,59,.5)}
+/* Panels / Cards */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-elevation);
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+.panel h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.mute {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
 
-.row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(99,134,235,.25)}
-.row b{flex:1}
-.row button{width:auto;padding:7px 13px;margin:0}
-.q-card{background:rgba(7,13,36,.75);border:1px solid rgba(99,134,235,.35);border-radius:12px;padding:14px;margin-bottom:12px}
-.q-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.flex-gap{display:flex;gap:8px}
-.flex-gap button{margin:0}
-#confetti{position:fixed;inset:0;pointer-events:none;z-index:99}
+/* Inputs & Form Elements */
+input, select, textarea {
+  width: 100%;
+  font: inherit;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  margin-top: 8px;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+textarea { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; min-height: 120px; resize: vertical; }
+
+/* Buttons */
+button {
+  font: inherit;
+  font-weight: 600;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition);
+  text-transform: none;
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
+button.primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+button.primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+button.alt {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-main);
+}
+button.alt:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+}
+button.danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+button.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* Opties Knoppen (Multiple Choice) */
+button.opt {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  text-align: left;
+  justify-content: flex-start;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+button.opt .letter {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+button.opt:hover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.04);
+}
+button.opt:hover .letter {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* Vraag header & Klok */
+.quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.badge-round {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.timer-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.timer-pill.urgent {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.4);
+  animation: pulse 1s infinite alternate;
+}
+@keyframes pulse {
+  from { opacity: 1; }
+  to { opacity: 0.6; }
+}
+
+.question-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+/* Scorebord / Leaderboard */
+.leaderboard-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.leaderboard-item.me {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.05);
+}
+.leaderboard-item .rank {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 20px;
+}
+.leaderboard-item .name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.leaderboard-item .score {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.95rem;
+}
+
+/* Host Regiekamer & Vragenlijst */
+.q-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.q-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.row:last-child { border-bottom: none; }
+.row b { flex: 1; font-weight: 600; font-size: 0.95rem; }
+
+/* Groot Scherm Styling (#scherm) */
+.is-screen .screen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+.is-screen .screen-opt {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.is-screen .screen-opt span {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+.lobby-screen-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  align-items: center;
+}
+.qr-container {
+  background: #fff;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  text-align: center;
+  width: fit-content;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.qr-container img {
+  display: block;
+  width: 180px;
+  height: 180px;
+}
+
+.feedback-box {
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  margin-top: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.feedback-box.correct { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success); }
+.feedback-box.incorrect { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--danger); }
+
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 99; }
 </style>
 </head>
 <body>
 <canvas id="confetti"></canvas>
-<div id="app"><div class="panel" style="text-align:center"><h2>Laden...</h2></div></div>
+<div id="app">
+  <div class="panel" style="text-align: center; padding: 40px;">
+    <div class="mute">Systeem wordt geladen...</div>
+  </div>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -112,7 +452,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let hostOk = sessionStorage.getItem('hostOk') === '1';
     let me = JSON.parse(localStorage.getItem('me') || 'null');
     let game = {phase:'lobby'}, players = {}, answers = {}, curQ = null, aRef = null, revealing = false;
-    let draftName = '', draftAns = '';
+    let draftName = '', draftAns = '', hostTab = 'visual';
 
     let db = null;
     try {
@@ -214,7 +554,7 @@ window.addEventListener('DOMContentLoaded', () => {
         sessionStorage.setItem('hostOk', '1');
         hostOk = true;
         render();
-      } else alert('Verkeerde pincode');
+      } else alert('Onjuiste pincode');
     };
 
     window.addQ = () => { const qs = getQs(); qs.push({round:"Ronde", type:"mc", q:"Nieuwe vraag...", options:["A","B","C","D"], correct:0}); setQs(qs); };
@@ -223,19 +563,22 @@ window.addEventListener('DOMContentLoaded', () => {
     window.updateOpt = (i, oi, v) => { const qs = getQs(); qs[i].options[oi] = v; localStorage.setItem('qs', JSON.stringify(qs)); };
 
     function head() {
-      return `<div class="brand"><div class="brand-sub">★ De Grote Kantoor Quiz ★</div><h1>De <span>Slimste</span> Collega</h1></div>`;
+      return `<div class="brand">
+        <div class="brand-pill">★ Studio Edition</div>
+        <h1>De <span>Slimste</span> Collega</h1>
+      </div>`;
     }
 
     function board(n = 15) {
       const r = ranked();
       let h = r.slice(0, n).map((p, i) => `
-        <li class="${me && p.id === me.id ? 'me' : ''}">
-          <span class="rank">${i + 1}</span>
-          <span>${getAvatar(p.name)}</span>
-          <b>${p.name}</b>
-          <em>${p.score || 0} sec</em>
+        <li class="leaderboard-item ${me && p.id === me.id ? 'me' : ''}">
+          <span class="rank">#${i + 1}</span>
+          <span style="font-size: 1.1rem;">${getAvatar(p.name)}</span>
+          <span class="name">${p.name}</span>
+          <span class="score">${p.score || 0} pts</span>
         </li>`).join('');
-      return `<div class="panel"><ol class="board">${h || '<li class="mute">Nog geen spelers in de lobby</li>'}</ol></div>`;
+      return `<ul class="leaderboard-list">${h || '<li class="mute" style="text-align:center; padding: 20px;">Nog geen actieve spelers</li>'}</ul>`;
     }
 
     function render() {
@@ -248,48 +591,105 @@ window.addEventListener('DOMContentLoaded', () => {
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(cleanBase)}`;
         
         if (game.phase === 'lobby') {
-          appEl.innerHTML = head() + `<div class="panel"><h2>Scan de QR-code om mee te spelen!</h2><p style="color:var(--gold);font-weight:bold">${cleanBase}</p><div style="text-align:center;margin:15px"><img src="${qrUrl}" style="background:#fff;padding:10px;border-radius:12px;width:180px"></div><p>${np} spelers verbonden: ${ranked().map(p=>p.name).join(', ') || 'nog niemand'}</p></div>`;
+          appEl.innerHTML = head() + `
+            <div class="panel">
+              <div class="lobby-screen-grid">
+                <div>
+                  <div class="brand-pill" style="margin-bottom: 8px;">Wachtkamer</div>
+                  <h2 style="font-size: 1.75rem; margin-bottom: 12px;">Klaar voor de start?</h2>
+                  <p class="mute" style="margin-bottom: 16px;">Scan de QR-code met je gsm of ga naar:</p>
+                  <p style="font-family:'JetBrains Mono',monospace; color: var(--primary); font-weight:700; margin-bottom: 20px;">${cleanBase}</p>
+                  <p class="mute"><b>${np}</b> collega${np===1?'':'s'} verbonden in de studio.</p>
+                </div>
+                <div class="qr-container">
+                  <img src="${qrUrl}" alt="QR Code">
+                </div>
+              </div>
+            </div>`;
         } else if (game.phase === 'question') {
-          appEl.innerHTML = head() + `<div class="panel"><div class="q">${game.cur.q}</div><p class="mute">${Object.keys(answers).length} van ${np} hebben geantwoord</p></div>`;
+          const c = game.cur;
+          const opts = c.type === 'mc' ? `<div class="screen-grid">${c.options.map((o,i)=>`<div class="screen-opt"><span>${'ABCD'[i]}</span>${o}</div>`).join('')}</div>` : '';
+          appEl.innerHTML = head() + `
+            <div class="panel">
+              <div class="quiz-header">
+                <span class="badge-round">${c.round || 'Vraag'}</span>
+                <span class="timer-pill" id="bigTimer">⏳ ${CFG.seconds}s</span>
+              </div>
+              <div class="question-text" style="font-size: 1.75rem;">${c.q}</div>
+              ${opts}
+              <p class="mute" style="margin-top: 24px;"><b>${Object.keys(answers).length}</b> van <b>${np}</b> hebben geantwoord</p>
+            </div>`;
+        } else if (game.phase === 'reveal') {
+          appEl.innerHTML = head() + `
+            <div class="panel">
+              <span class="badge-round">Antwoord</span>
+              <div class="question-text" style="font-size: 1.5rem; margin-top: 8px;">${game.cur.q}</div>
+              <div class="feedback-box correct" style="font-size: 1.2rem;">Juist antwoord: <b>${game.correct}</b></div>
+            </div>
+            <div class="panel">
+              <h2>Live Tussenstand</h2>
+              ${board(10)}
+            </div>`;
         } else {
-          appEl.innerHTML = head() + `<div class="panel"><h2>Tussenstand</h2></div>` + board(15);
+          appEl.innerHTML = head() + `
+            <div class="panel" style="text-align: center; padding: 40px;">
+              <h2 style="font-size: 2rem; margin-bottom: 8px;">🏆 Einde van de Quiz!</h2>
+              <p class="mute">De winnaar is gekroond tot De Slimste Collega.</p>
+            </div>
+            <div class="panel">${board(15)}</div>`;
         }
         return;
       }
 
       if (isHost) {
         if (!hostOk) {
-          appEl.innerHTML = head() + `<div class="panel"><h2>Hostscherm</h2><input id="pin" type="password" placeholder="Pincode"><button onclick="checkPin()">Open</button></div>`;
+          appEl.innerHTML = head() + `
+            <div class="panel">
+              <h2>Regiekamer Beveiliging</h2>
+              <p class="mute" style="margin-bottom: 16px;">Voer de pincode in om de quiz te beheren.</p>
+              <input id="pin" type="password" inputmode="numeric" placeholder="••••">
+              <button class="primary" onclick="checkPin()" style="margin-top: 16px;">Ontgrendel Regiekamer</button>
+            </div>`;
         } else if (game.phase === 'lobby') {
           const qs = getQs();
-          appEl.innerHTML = head() + `<div class="panel"><h2>Regiekamer</h2><button onclick="startQ(0)">Start Spel</button></div><div class="panel"><h2>Vragen Bewerken</h2>${qs.map((q,i)=>`<div class="q-card"><input value="${q.q}" oninput="updateQField(${i},'q',this.value)"></div>`).join('')}<button class="alt" onclick="addQ()">+ Vraag</button></div>`;
+          appEl.innerHTML = head() + `
+            <div class="panel">
+              <h2>Regiekamer</h2>
+              <p class="mute" style="margin-bottom: 16px;"><b>${Object.keys(players).length}</b> spelers in de lobby.</p>
+              <button class="primary" onclick="startQ(0)">Start Eerste Vraag</button>
+            </div>
+            <div class="panel">
+              <h2>Vragenoverzicht (${qs.length})</h2>
+              ${qs.map((q,i)=>`<div class="q-card"><div class="q-card-header"><b>Vraag ${i+1}</b></div><input value="${q.q}" oninput="updateQField(${i},'q',this.value)"></div>`).join('')}
+              <button class="alt" onclick="addQ()">+ Vraag toevoegen</button>
+            </div>`;
         } else if (game.phase === 'question') {
-          appEl.innerHTML = head() + `<div class="panel"><h2>Vraag bezig</h2><button onclick="reveal()">Toon Antwoord</button></div>`;
+          appEl.innerHTML = head() + `
+            <div class="panel">
+              <span class="badge-round">Live Vraag</span>
+              <h2 style="margin-top: 8px;">Vraag ${game.q+1} actief</h2>
+              <p class="mute" style="margin-bottom: 16px;"><b>${Object.keys(answers).length}</b> antwoorden binnengekomen.</p>
+              <button class="primary" onclick="reveal()">Toon Antwoord & Score</button>
+            </div>`;
         } else {
-          appEl.innerHTML = head() + `<div class="panel"><h2>Uitslag</h2><button onclick="startQ(${game.q+1})">Volgende</button></div>` + board();
+          appEl.innerHTML = head() + `
+            <div class="panel">
+              <span class="badge-round">Resultaat</span>
+              <h2 style="margin-top: 8px;">Vraag afgerond</h2>
+              <button class="primary" onclick="startQ(${game.q+1})" style="margin-top: 16px;">Volgende Vraag</button>
+            </div>
+            <div class="panel"><h2>Stand</h2>${board()}</div>`;
         }
         return;
       }
 
-      // Speler scherm
+      // Speler Scherm
       if (!me) {
-        appEl.innerHTML = head() + `<div class="panel"><h2>Meespelen</h2><input maxlength="22" placeholder="Jouw voornaam" oninput="draftName=this.value" onkeydown="if(event.key==='Enter')join()"><button onclick="join()">Start</button></div>`;
-      } else if (game.phase === 'lobby') {
-        appEl.innerHTML = head() + `<div class="panel" style="text-align:center"><h2>Welkom ${me.name}!</h2><p class="mute">Wacht op de quizmaster...</p></div>`;
-      } else if (game.phase === 'question') {
-        const c = game.cur;
-        let body = answers[me.id] ? `<p class="good"><b>Antwoord verzonden!</b></p>` : (c.type === 'mc' ? c.options.map((o,i)=>`<button class="opt" onclick="submit(${i})"><span class="letter">${'ABCD'[i]}</span>${o}</button>`).join('') : `<input placeholder="Jouw antwoord" oninput="draftAns=this.value"><button onclick="submit(document.querySelector('input').value)">Verstuur</button>`);
-        appEl.innerHTML = head() + `<div class="panel"><div class="q">${c.q}</div>${body}</div>`;
-      } else {
-        appEl.innerHTML = head() + `<div class="panel"><h2>Ronde afgelopen</h2></div>` + board();
-      }
-    }
-
-    render();
-  } catch(err) {
-    document.getElementById('app').innerHTML = `<div class="panel"><h2>Fout</h2><p>${err.message}</p></div>`;
-  }
-});
-</script>
-</body>
-</html>
+        appEl.innerHTML = head() + `
+          <div class="panel">
+            <h2>Kandidaten Aanmelding</h2>
+            <p class="mute" style="margin-bottom: 16px;">Vul je voornaam in om de studio te betreden.</p>
+            <input maxlength="22" placeholder="Jouw voornaam" oninput="draftName=this.value" onkeydown="if(event.key==='Enter')join()">
+            <button class="primary" onclick="join()" style="margin-top: 16px;">Deelnemen</button>
+          </div>`;
+      } else if (game.phase === 'lobby
