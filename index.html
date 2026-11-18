@@ -104,14 +104,15 @@ window.addEventListener('DOMContentLoaded', () => {
     const AVATARS = ["☕","📊","🖨️","📎","🍩","🧠","💼","🚀","🦉","🦊","⚡","🎯"];
     const getAvatar = name => AVATARS[Math.abs([...(name||'')].reduce((acc,c)=>acc+c.charCodeAt(0),0)) % AVATARS.length];
 
-    const isHost = location.hash.toLowerCase().includes('host');
-    const isScreen = location.hash.toLowerCase().includes('scherm');
+    const urlParams = new URLSearchParams(location.search);
+    const isHost = urlParams.has('host');
+    const isScreen = urlParams.has('scherm');
     if (isScreen) document.body.classList.add('is-screen');
 
     let hostOk = sessionStorage.getItem('hostOk') === '1';
     let me = JSON.parse(localStorage.getItem('me') || 'null');
     let game = {phase:'lobby'}, players = {}, answers = {}, curQ = null, aRef = null, revealing = false;
-    let draftName = '', draftAns = '', hostTab = 'visual';
+    let draftName = '', draftAns = '';
 
     let db = null;
     try {
@@ -243,11 +244,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
       if (isScreen) {
         const np = Object.keys(players).length;
-        const joinUrl = location.origin + location.pathname;
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(joinUrl)}`;
+        const cleanBase = location.origin + location.pathname;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(cleanBase)}`;
         
         if (game.phase === 'lobby') {
-          appEl.innerHTML = head() + `<div class="panel"><h2>Scan de QR-code om mee te spelen!</h2><p style="color:var(--gold);font-weight:bold">${joinUrl}</p><div style="text-align:center;margin:15px"><img src="${qrUrl}" style="background:#fff;padding:10px;border-radius:12px;width:180px"></div><p>${np} spelers verbonden: ${ranked().map(p=>p.name).join(', ') || 'nog niemand'}</p></div>`;
+          appEl.innerHTML = head() + `<div class="panel"><h2>Scan de QR-code om mee te spelen!</h2><p style="color:var(--gold);font-weight:bold">${cleanBase}</p><div style="text-align:center;margin:15px"><img src="${qrUrl}" style="background:#fff;padding:10px;border-radius:12px;width:180px"></div><p>${np} spelers verbonden: ${ranked().map(p=>p.name).join(', ') || 'nog niemand'}</p></div>`;
         } else if (game.phase === 'question') {
           appEl.innerHTML = head() + `<div class="panel"><div class="q">${game.cur.q}</div><p class="mute">${Object.keys(answers).length} van ${np} hebben geantwoord</p></div>`;
         } else {
